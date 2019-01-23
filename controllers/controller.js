@@ -41,10 +41,10 @@ module.exports = function (app) {
     var options = {
         method: "GET",
         url: 'https://api.shipengine.com/v1/tracking',
-        qs: { carrier_code: 'ups', tracking_number: '[enter-ups-tracking-number]' },
+        qs: { carrier_code: 'ups', tracking_number: '[enter-tracking-number]' },
         headers:
             {
-                'api-key': '[enter-shipengine-api-key]',
+                'api-key': '[enter-api-key]',
                 'accept': 'application/json'
             },
     };
@@ -57,29 +57,30 @@ module.exports = function (app) {
                 // console.log(body)
                 var trackingData = JSON.parse(body)
                 // res.send(info);
-                res.json(trackingData);
-                console.log('GET Tracking Information: ', trackingData);
+                return res.json(trackingData);
+                console.log('GET Tracking Number: ', trackingData.tracking_number);
             }
         })
     });
 
-        // Post / Update tracking information to tracking_table in db //
-        app.post("/api/tracking/retrieve", function (req, res) {
-            // table = "tracking_table";
-            // col = ["tracking_number"];
-            // val = [
-            //     req.body.tracking_number,
-            // ];
-            // trackingData.push(req.body);
-
-            console.log('POST Tracking Information: ', req.body);
-            // console.log('Tracking Number: ', req.body[0]);
-
-            // main.create(table, col, val, function (data) {
-            //     res.json({ id: data.insertId, tracking_number: data.inserttracking_number });
-            //     res.json(data)
-            //     console.log(data);
-            // });
+        // Val not coming through. Returning {} //
+        app.post('/api/tracking/retrieve', function (req, res) {
+            table = 'test_table';
+            col = ['tracking_number', 'carrier_code'];
+            val = [
+                req.body.tracking_number, 
+                req.body.carrier_code, 
+            ];
+    
+            console.log('body: ', trackingData ),
+            // console.log('Tracking Number and Carrier Code: ', val),
+            // console.log('Tracking Number: ', req.body.tracking_number),
+    
+            main.create(table, col, val, function(data){
+                res.json({ id: data.insertId, tracking_number: data.inserttracking_number});
+                // res.json(data)
+                console.log(data);
+            })
         });
 
 };
